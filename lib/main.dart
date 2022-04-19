@@ -10,6 +10,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+//final ThemeData theme = ThemeData();
 
   /*myRequest() async {
     final res = await HttpHelper.getPopular();
@@ -22,6 +23,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'Peliculas',
         initialRoute: ListPage.ROUTE,
+        //theme: theme.copyWith(font ,primaryColor: Colors.orange,colorScheme: theme.colorScheme.copyWith(secondary:Colors.red)),
+        theme: ThemeData(
+            primarySwatch: Colors.deepPurple,
+            accentColor: Colors.red,
+            fontFamily: 'Georgia',
+            textTheme: TextTheme(
+              headline1: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold),
+              headline6: TextStyle(fontSize: 15.0, fontStyle: FontStyle.italic),
+              bodyText1: TextStyle(fontSize: 14.0),
+              bodyText2: TextStyle(fontStyle: FontStyle.italic),
+            )),
         routes: {
           ListPage.ROUTE: (_) => ListPage(),
           DetailPage.ROUTE: (_) => DetailPage(

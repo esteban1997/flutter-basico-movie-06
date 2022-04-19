@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names, avoid_unnecessary_containers, avoid_print, prefer_const_constructors
+// ignore_for_file: constant_identifier_names, avoid_unnecessary_containers, avoid_print, prefer_const_constructors, prefer_final_fields
 
 import 'package:flutter/material.dart';
 import 'package:movies_06/helpers/custom_transition_route.dart';
@@ -47,6 +47,7 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: () {}),
       appBar: AppBar(
         title: _barSearch,
         actions: [
@@ -94,8 +95,11 @@ class _ListPageState extends State<ListPage> {
 
                     return Card(
                         child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: image,
+                      leading: Hero(
+                        tag: "poster_${m.id}",
+                        child: CircleAvatar(
+                          backgroundImage: image,
+                        ),
                       ),
                       trailing: const Icon(Icons.arrow_forward),
                       onTap: () {
@@ -143,12 +147,20 @@ class _ListPageState extends State<ListPage> {
                                   movie: m,
                                 )));
                       },
-                      title: Text(m.title),
+                      title: Hero(
+                          tag: "title_${m.id}",
+                          child: Text(
+                            m.title,
+                            style: Theme.of(context).textTheme.headline6,
+                          )),
                       subtitle: Align(
                           alignment: Alignment.centerRight,
-                          child: Text(
-                            m.releaseDate,
-                            style: const TextStyle(fontStyle: FontStyle.italic),
+                          child: Hero(
+                            tag: "date_${m.id}",
+                            child: Text(
+                              m.releaseDate,
+                              style: Theme.of(context).textTheme.bodyText2,
+                            ),
                           )),
                     ));
                   }),
