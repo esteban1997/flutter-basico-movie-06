@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names, avoid_unnecessary_containers, avoid_print, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:movies_06/helpers/custom_transition_route.dart';
 import 'package:movies_06/helpers/http_helper.dart';
 import 'package:movies_06/models/movie_response_model%20.dart';
 import 'package:movies_06/movies/detail_page.dart';
@@ -98,8 +99,49 @@ class _ListPageState extends State<ListPage> {
                       ),
                       trailing: const Icon(Icons.arrow_forward),
                       onTap: () {
-                        Navigator.pushNamed(context, DetailPage.ROUTE,
-                            arguments: m);
+                        //navegacion por nombre
+                        // Navigator.pushNamed(context, DetailPage.ROUTE,
+                        //     arguments: m);
+
+                        //navegacion por defecto
+                        // Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        //   return DetailPage(movie: m);
+                        // }));
+
+                        //navegacion con trasiciones
+                        // Navigator.push(
+                        //     context,
+                        //     PageRouteBuilder(
+                        //         pageBuilder: (_, Animation<double> animation,
+                        //             Animation<double> animationSecondary) {
+                        //           return DetailPage(movie: m);
+                        //         },
+                        //         transitionsBuilder: (_,
+                        //             Animation<double> animation,
+                        //             Animation<double> animationSecondary,
+                        //             Widget child) {
+                        //           return Align(
+                        //             alignment: Alignment.bottomLeft,
+                        //             child: SizeTransition(
+                        //                 sizeFactor: animation, child: child),
+                        //           );
+                        //         },
+                        //         transitionDuration: Duration(milliseconds: 500),
+                        //         reverseTransitionDuration:
+                        //             Duration(milliseconds: 500)
+                        //             ),
+                        //             );
+
+                        // Navigator.push(context,
+                        //     CustomFadeTransitionRoute(DetailPage(movie: m)));
+
+                        Navigator.push(
+                            context,
+                            CustomTransitionRoute(
+                                transitionType: TransitionType.slideLeft,
+                                widget: DetailPage(
+                                  movie: m,
+                                )));
                       },
                       title: Text(m.title),
                       subtitle: Align(

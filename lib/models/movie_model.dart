@@ -26,6 +26,19 @@ class MovieModel {
       required this.voteAverage,
       required this.voteCount});
 
+  MovieModel.empty()
+      : id = 0,
+        backdropPath = "",
+        originalLanguage = "",
+        originalTitle = "",
+        overview = "",
+        popularity = 0,
+        posterPath = "",
+        releaseDate = "",
+        title = "",
+        voteAverage = 0,
+        voteCount = 0;
+
   getImagePoster() {
     if (posterPath == null) {
       return 'https://st.depositphotos.com/1027431/2529/i/950/depositphotos_25299009-stock-photo-white-silk-background.jpg';

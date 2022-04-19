@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, prefer_const_constructors
 import 'package:flutter/material.dart';
+import 'package:movies_06/models/movie_model.dart';
 import 'package:movies_06/movies/detail_page.dart';
 import 'package:movies_06/movies/list_page.dart';
 
@@ -23,7 +24,9 @@ class MyApp extends StatelessWidget {
         initialRoute: ListPage.ROUTE,
         routes: {
           ListPage.ROUTE: (_) => ListPage(),
-          DetailPage.ROUTE: (_) => DetailPage()
+          DetailPage.ROUTE: (_) => DetailPage(
+                movie: MovieModel.empty(),
+              )
         });
   }
 }

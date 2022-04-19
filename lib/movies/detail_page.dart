@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names, avoid_print
+// ignore_for_file: constant_identifier_names, avoid_print, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
 import 'package:movies_06/helpers/http_helper.dart';
@@ -7,13 +7,14 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movies_06/widgets/movies/horizontal_movies.dart';
 
 class DetailPage extends StatelessWidget {
-  const DetailPage({Key? key}) : super(key: key);
   static const ROUTE = "/detail";
+  final MovieModel movie;
+
+  const DetailPage({required this.movie});
 
   @override
   Widget build(BuildContext context) {
-    MovieModel? movie =
-        ModalRoute.of(context)!.settings.arguments as MovieModel;
+    //MovieModel? movie = ModalRoute.of(context)!.settings.arguments as MovieModel;
 
     String pathFull, pathPosted;
     if (movie.backdropPath == null) {
