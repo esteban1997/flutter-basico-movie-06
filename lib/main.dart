@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, prefer_const_constructors
 import 'package:flutter/material.dart';
+import 'package:movies_06/movies/detail_page.dart';
 import 'package:movies_06/movies/list_page.dart';
 
 void main() {
@@ -20,6 +21,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'Peliculas',
         initialRoute: ListPage.ROUTE,
-        routes: {ListPage.ROUTE: (_) => ListPage()});
+        routes: {
+          ListPage.ROUTE: (_) => ListPage(),
+          DetailPage.ROUTE: (_) => DetailPage()
+        });
   }
 }

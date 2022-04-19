@@ -39,6 +39,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   http: #https://pub.dev/packages/http
+  flutter_rating_bar: #https://pub.dev/packages/flutter_rating_bar
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

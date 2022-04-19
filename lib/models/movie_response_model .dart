@@ -3,10 +3,15 @@
 import 'package:movies_06/models/movie_model.dart';
 
 class MovieResponseModel {
-  int page;
-  List<MovieModel> movies;
+  late int page;
+  late List<MovieModel> movies;
 
   MovieResponseModel(this.page, this.movies);
+
+  MovieResponseModel.empty() {
+    movies = [];
+    page = 1;
+  }
 
   MovieResponseModel.fromJson(Map<String, dynamic> movieResponseMap)
       : page = movieResponseMap['page'],

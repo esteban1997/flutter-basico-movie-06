@@ -1,8 +1,9 @@
-// ignore_for_file: constant_identifier_names, avoid_unnecessary_containers, avoid_print
+// ignore_for_file: constant_identifier_names, avoid_unnecessary_containers, avoid_print, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:movies_06/helpers/http_helper.dart';
 import 'package:movies_06/models/movie_response_model%20.dart';
+import 'package:movies_06/movies/detail_page.dart';
 
 class ListPage extends StatefulWidget {
   const ListPage({Key? key}) : super(key: key);
@@ -14,56 +15,126 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-  late List<Widget>? widgetMovies;
+  MovieResponseModel movieResponse = MovieResponseModel.empty();
+
+  ScrollController _scrollController = ScrollController();
+
+  bool _loadData = false;
+
+  Icon _barVisibleIcon = Icon(Icons.search);
+  Widget _barSearch = Text("Listado de peliculas");
+
+  @override
+  void initState() {
+    _dataList();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+              (_scrollController.position.maxScrollExtent - 50) &&
+          !_loadData) {
+        _dataList();
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("texto listado")),
+      appBar: AppBar(
+        title: _barSearch,
+        actions: [
+          IconButton(
+              onPressed: () {
+                if (_barVisibleIcon.icon == Icons.search) {
+                  _barVisibleIcon = Icon(Icons.cancel);
+                  _barSearch = TextField(
+                    textInputAction: TextInputAction.search,
+                    style: TextStyle(color: Colors.white),
+                    onSubmitted: (text) {
+                      movieResponse = MovieResponseModel.empty();
+                      _dataList(text: text);
+                    },
+                  );
+                } else {
+                  movieResponse = MovieResponseModel.empty();
+                  _barVisibleIcon = Icon(Icons.search);
+                  _barSearch = Text("Listado de peliculas");
+
+                  _dataList();
+                }
+                setState(() {});
+              },
+              icon: _barVisibleIcon)
+        ],
+      ),
       body: Container(
-        child: FutureBuilder(
-            future: _dataList(),
-            builder: (_, AsyncSnapshot snapshot) {
-              if (!snapshot.hasData) {
-                return const CircularProgressIndicator();
-              }
-              return ListView.builder(
-                  itemCount: widgetMovies!.length,
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: movieResponse.movies.length,
                   itemBuilder: (_, int position) {
-                    return widgetMovies![position];
-                  });
-            }),
+                    var m = movieResponse.movies[position];
+                    NetworkImage image;
+                    if (m.posterPath == null) {
+                      image = const NetworkImage(
+                          'https://st.depositphotos.com/1027431/2529/i/950/depositphotos_25299009-stock-photo-white-silk-background.jpg');
+                    } else {
+                      image =
+                          NetworkImage(HttpHelper.baseUrlImage + m.posterPath!);
+                    }
+
+                    return Card(
+                        child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: image,
+                      ),
+                      trailing: const Icon(Icons.arrow_forward),
+                      onTap: () {
+                        Navigator.pushNamed(context, DetailPage.ROUTE,
+                            arguments: m);
+                      },
+                      title: Text(m.title),
+                      subtitle: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            m.releaseDate,
+                            style: const TextStyle(fontStyle: FontStyle.italic),
+                          )),
+                    ));
+                  }),
+            ),
+            SizedBox(
+              height: _loadData ? 20 : 0,
+              width: 20,
+              child: const CircularProgressIndicator(),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Future<List<Widget>?> _dataList() async {
-    final MovieResponseModel? movieResponse = await HttpHelper.getPopular();
-    print(movieResponse);
+  _dataList({String text = ""}) async {
+    _loadData = true;
+    setState(() {});
+    final movieResponseAux = await (_barVisibleIcon.icon == Icons.search
+        ? HttpHelper.getPopular(movieResponse.page)
+        : HttpHelper.getSearch(movieResponse.page, text));
 
-    var image;
+    _loadData = false;
 
-    widgetMovies = movieResponse?.movies.map((m) {
-      if (m.backdropPath == null) {
-        //image = Image.network('https://st.depositphotos.com/1027431/2529/i/950/depositphotos_25299009-stock-photo-white-silk-background.jpg');
-        image = NetworkImage(
-            'https://st.depositphotos.com/1027431/2529/i/950/depositphotos_25299009-stock-photo-white-silk-background.jpg');
-      } else {
-        //image = Image.network(HttpHelper.baseUrlImage + m.posterPath!);
-        image = NetworkImage(HttpHelper.baseUrlImage + m.posterPath!);
-      }
-
-      return Card(
-        child: ListTile(
-          //leading: image,
-          leading: CircleAvatar(
-            backgroundImage: image,
-          ),
-          title: Text(m.title),
-        ),
-      );
-    }).toList();
-
-    return widgetMovies;
+    if (movieResponseAux != null && movieResponseAux.movies.isNotEmpty) {
+      movieResponse.movies.addAll(movieResponseAux.movies);
+      movieResponse.page++;
+    }
+    setState(() {});
   }
 }
